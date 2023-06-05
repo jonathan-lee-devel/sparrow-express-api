@@ -2,6 +2,7 @@ import {Router} from 'express';
 import passport from 'passport';
 import bunyan from 'bunyan';
 import {LoginStatus} from '../enums/login-status';
+import {User} from "../models/User";
 
 /**
  * Configuration for the user login route.
@@ -15,7 +16,7 @@ export const configureLoginRoute = (
     path: string,
 ) => {
   router.post(path, (req, res, next) => {
-    passport.authenticate('local', (err, user, _) => {
+    passport.authenticate('local', (err: any, user: User, _: any) => {
       if (err) {
         return next(err);
       }
