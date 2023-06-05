@@ -1,0 +1,11 @@
+.github
+nginx
+node_modules
+.env
+.gitignore
+docker-compose.yml
+Dockerfile
+jest.config.cjs
+LICENSE
+README.md
+sonar-project.cjs

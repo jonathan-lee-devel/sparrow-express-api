@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  express:
+    restart: on-failure
+    image: jonathanleedev/sparrow-express-api:latest
+    environment:
+      SESSION_SECRET: ${SESSION_SECRET}
+      FRONT_END_URL: ${FRONT_END_URL}
+      DATABASE_URL: ${DATABASE_URL}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+
+  nginx:
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    ports:
+      - '443:443'
+    links:
+      - express
+    volumes:
+      - ${SERVER_CERT_PATH}:/etc/nginx/server.crt
+      - ${SERVER_KEY_PATH}:/etc/nginx/server.key
