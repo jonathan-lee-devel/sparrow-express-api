@@ -103,29 +103,4 @@ describe('Registration Service Handle Existing User Tests', () => {
     expect(registrationVerificationTokenEmailDeleted).toStrictEqual(requestEmail);
     expect(passwordResetVerificationTokenEmailDeleted).toStrictEqual(requestEmail);
   });
-  it('When error is thrown Then error is caught and logged and false returned', async () => {
-    const errorMessage = 'Error message';
-    let loggedMessage = '';
-    const handleExistingUser = makeHandleExistingUser(
-        // @ts-ignore
-        {
-          // @ts-ignore
-          error: (message) => {
-            loggedMessage = message;
-          },
-        },
-        {
-          findOne: async () => {
-            throw new Error(errorMessage);
-          },
-        },
-        {},
-        {},
-    );
-
-    const result = await handleExistingUser('test@mail.com');
-
-    expect(result).toBeFalsy();
-    expect(loggedMessage).toStrictEqual(`An error has occurred: Error: ${errorMessage}`);
-  });
 });

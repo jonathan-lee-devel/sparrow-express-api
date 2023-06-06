@@ -12,23 +12,18 @@ export const makeHandleExistingUser = (
     PasswordResetVerificationTokenModel: Model<PasswordResetVerificationToken>,
 ): HandleExistingUserFunction => {
   return async function handleExistingUser(email: string): Promise<boolean> {
-    try {
-      const existingUser = await UserModel.findOne({email}, {__v: 0});
-      if (!existingUser) {
-        await RegistrationVerificationTokenModel.deleteOne({userEmail: email});
-        await PasswordResetVerificationTokenModel.deleteOne({userEmail: email});
-      }
-      if (existingUser && existingUser.emailVerified) {
-        return true;
-      }
-      if (existingUser && !existingUser.emailVerified) {
-        await UserModel.deleteOne({email});
-        await RegistrationVerificationTokenModel.deleteOne({userEmail: email});
-        await PasswordResetVerificationTokenModel.deleteOne({userEmail: email});
-        return false;
-      }
-    } catch (err) {
-      logger.error(`An error has occurred: ${err}`);
+    const existingUser = await UserModel.findOne({email}, {__v: 0});
+    if (!existingUser) {
+      await RegistrationVerificationTokenModel.deleteOne({userEmail: email});
+      await PasswordResetVerificationTokenModel.deleteOne({userEmail: email});
+    }
+    if (existingUser && existingUser.emailVerified) {
+      return true;
+    }
+    if (existingUser && !existingUser.emailVerified) {
+      await UserModel.deleteOne({email});
+      await RegistrationVerificationTokenModel.deleteOne({userEmail: email});
+      await PasswordResetVerificationTokenModel.deleteOne({userEmail: email});
       return false;
     }
   };

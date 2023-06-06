@@ -22,26 +22,22 @@ export const makeUpdateProfile = (
     if (requestingUser.email !== email) {
       return returnForbidden();
     }
-    try {
-      const userModel = await UserModel.findOne({email}, {__v: 0});
-      if (!userModel) {
-        logger.error(`No user profile available for requesting user: ${email}`);
-        return returnInternalServerError();
-      }
-
-      userModel.firstName = firstName;
-      userModel.lastName = lastName;
-      await userModel.save();
-      return {
-        status: 200,
-        data: {
-          email,
-          firstName,
-          lastName,
-        },
-      };
-    } catch (err) {
+    const userModel = await UserModel.findOne({email}, {__v: 0});
+    if (!userModel) {
+      logger.error(`No user profile available for requesting user: ${email}`);
       return returnInternalServerError();
     }
+
+    userModel.firstName = firstName;
+    userModel.lastName = lastName;
+    await userModel.save();
+    return {
+      status: 200,
+      data: {
+        email,
+        firstName,
+        lastName,
+      },
+    };
   };
 };

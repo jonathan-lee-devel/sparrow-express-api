@@ -14,35 +14,30 @@ export const makeGetUnacknowledgedNotifications = (
   return async function getUnacknowledgedNotifications(
       requestingUser: User,
   ) {
-    try {
-      const notificationModels: Notification[] = await NotificationModel.find({
-        targetUserEmail: requestingUser.email,
-        isAcknowledged: false,
-      });
-      logger.info(`GET unacknowledged notifications for user with e-mail: <${requestingUser.email}>`);
-      if (!notificationModels) {
-        return returnInternalServerError();
-      }
-      const notificationDtos: NotificationDto[] = [];
-      for (const notificationModel of notificationModels) {
-        notificationDtos.push({
-          id: notificationModel.id,
-          targetUserEmail: notificationModel.targetUserEmail,
-          title: notificationModel.title,
-          content: notificationModel.content,
-          isAcknowledged: notificationModel.isAcknowledged,
-          type: NotificationType[notificationModel.type],
-          timestamp: notificationModel.timestamp,
-        });
-      }
-
-      return {
-        status: 200,
-        data: notificationDtos,
-      };
-    } catch (err) {
-      logger.error(`An error has occurred: ${err}`);
+    const notificationModels: Notification[] = await NotificationModel.find({
+      targetUserEmail: requestingUser.email,
+      isAcknowledged: false,
+    });
+    logger.info(`GET unacknowledged notifications for user with e-mail: <${requestingUser.email}>`);
+    if (!notificationModels) {
       return returnInternalServerError();
     }
+    const notificationDtos: NotificationDto[] = [];
+    for (const notificationModel of notificationModels) {
+      notificationDtos.push({
+        id: notificationModel.id,
+        targetUserEmail: notificationModel.targetUserEmail,
+        title: notificationModel.title,
+        content: notificationModel.content,
+        isAcknowledged: notificationModel.isAcknowledged,
+        type: NotificationType[notificationModel.type],
+        timestamp: notificationModel.timestamp,
+      });
+    }
+
+    return {
+      status: 200,
+      data: notificationDtos,
+    };
   };
 };

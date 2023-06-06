@@ -39,18 +39,13 @@ export const makeCreateDelivery = (
       ...delivery,
     };
 
-    try {
-      await new DeliveryModel(newDelivery).save();
-      logger.info(`Successfully created new delivery with ID: ${newDelivery.id}`);
-      return {
-        status: 201,
-        data: {
-          ...newDelivery,
-        },
-      };
-    } catch (err) {
-      logger.error(`An error has occurred: ${err}`);
-      return returnInternalServerError();
-    }
+    await new DeliveryModel(newDelivery).save();
+    logger.info(`Successfully created new delivery with ID: ${newDelivery.id}`);
+    return {
+      status: 201,
+      data: {
+        ...newDelivery,
+      },
+    };
   };
 };

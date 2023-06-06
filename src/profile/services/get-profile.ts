@@ -19,24 +19,19 @@ export const makeGetProfile = (
     if (requestingUser.email !== email) {
       return returnForbidden();
     }
-    try {
-      const userModel = await UserModel.findOne({email}, {__v: 0});
-      if (!userModel) {
-        logger.error(`No user profile available for requesting user: ${email}`);
-        return returnInternalServerError();
-      }
-
-      return {
-        status: 200,
-        data: {
-          email,
-          firstName: userModel.firstName,
-          lastName: userModel.lastName,
-        },
-      };
-    } catch (err) {
-      logger.error(`An error has occurred: ${err}`);
+    const userModel = await UserModel.findOne({email}, {__v: 0});
+    if (!userModel) {
+      logger.error(`No user profile available for requesting user: ${email}`);
       return returnInternalServerError();
     }
+
+    return {
+      status: 200,
+      data: {
+        email,
+        firstName: userModel.firstName,
+        lastName: userModel.lastName,
+      },
+    };
   };
 };

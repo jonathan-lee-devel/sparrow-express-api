@@ -3,7 +3,7 @@ import {Model} from 'mongoose';
 import {Organization} from '../models/Organization';
 import {OrganizationMembershipRequest} from '../models/OrganizationMembershipRequest';
 import {User} from '../../main/models/User';
-import {returnForbidden, returnInternalServerError, returnNotFound} from '../../common/use-cases/status-data-container';
+import {returnForbidden, returnNotFound} from '../../common/use-cases/status-data-container';
 import {ApproveRequestToJoinOrganizationFunction} from '../types/approve-request-to-join-organization';
 import {errorMessageToDto} from '../../common/use-cases/errors';
 import {OrganizationMembershipStatus} from '../enums/OrganizationMembershipStatus';
@@ -59,14 +59,11 @@ export const makeApproveRequestToJoinOrganization = (
     organizationModel.memberEmails.push(organizationMembershipRequestModel.requestingUserEmail);
     organizationMembershipRequestModel.isApproved = true;
     organizationMembershipRequestModel.approvingAdministratorEmail = requestingUser.email;
-    try {
-      await organizationModel.markModified('memberEmails');
-      await organizationModel.save();
-      await organizationMembershipRequestModel.save();
-    } catch (err) {
-      logger.error(`An error has occurred: ${err}`);
-      return returnInternalServerError();
-    }
+
+    await organizationModel.markModified('memberEmails');
+    await organizationModel.save();
+    await organizationMembershipRequestModel.save();
+
     return {
       status: 200,
       data: {

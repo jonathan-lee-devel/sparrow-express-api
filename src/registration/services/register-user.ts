@@ -66,22 +66,15 @@ export const makeRegisterUser = (
       password: await encodePassword(password),
       emailVerified: false,
     };
-    try {
-      await new UserModel(newUser).save();
-    } catch (err) {
-      logger.error(`An error has occurred: ${err}`);
-      return {
-        status: 500,
-        data: {
-          status: RegistrationStatus[RegistrationStatus.FAILURE],
-        },
-      };
-    }
+    await new UserModel(newUser).save();
 
     // Mail is slow to send and can be sent asynchronously, hence, no await
     sendMail(email, 'Registration Confirmation',
         // @ts-ignore
-        `<h4>Please click the following link to verify your account: <a href="${process.env.FRONT_END_URL}/register/confirm/${registrationVerificationTokenContainer.data.value}">Verify Account</a></h4>`);
+        `<h4>Please click the following link to verify your account: <a href="${process.env.FRONT_END_URL}/register/confirm/${registrationVerificationTokenContainer.data.value}">Verify Account</a></h4>`)
+        .catch((reason) => {
+          logger.error(`An error has occurred while sending mail: ${reason}`);
+        });
 
     return {
       status: 200,

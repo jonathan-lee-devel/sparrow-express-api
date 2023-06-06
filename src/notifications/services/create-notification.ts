@@ -4,7 +4,6 @@ import {Model} from 'mongoose';
 import {CreateNotificationFunction} from '../types/create-notification';
 import {NotificationRequestDto} from '../dto/NotificationRequestDto';
 import {DEFAULT_ID_LENGTH} from '../../util/id/constants/default-id-length';
-import {returnInternalServerError} from '../../common/use-cases/status-data-container';
 import {Notification} from '../models/Notification';
 import {NotificationType} from '../enums/NotificationType';
 
@@ -22,24 +21,19 @@ export const makeCreateNotification = (
       ...notification,
     };
 
-    try {
-      await new NotificationModel(newNotification).save();
-      logger.info(`Successfully created new notification with ID: ${newNotification.id}`);
-      return {
-        status: 201,
-        data: {
-          id: newNotification.id,
-          title: newNotification.title,
-          content: newNotification.content,
-          targetUserEmail: newNotification.targetUserEmail,
-          isAcknowledged: newNotification.isAcknowledged,
-          type: NotificationType[newNotification.type],
-          timestamp: newNotification.timestamp,
-        },
-      };
-    } catch (err) {
-      logger.error(`An error has occurred: ${err}`);
-      return returnInternalServerError();
-    }
+    await new NotificationModel(newNotification).save();
+    logger.info(`Successfully created new notification with ID: ${newNotification.id}`);
+    return {
+      status: 201,
+      data: {
+        id: newNotification.id,
+        title: newNotification.title,
+        content: newNotification.content,
+        targetUserEmail: newNotification.targetUserEmail,
+        isAcknowledged: newNotification.isAcknowledged,
+        type: NotificationType[newNotification.type],
+        timestamp: newNotification.timestamp,
+      },
+    };
   };
 };

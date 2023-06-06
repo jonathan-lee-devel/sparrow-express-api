@@ -3,7 +3,7 @@ import {Model} from 'mongoose';
 import {Organization} from '../models/Organization';
 import {User} from '../../main/models/User';
 import {RemoveOrganizationMemberFunction} from '../types/remove-organization-member';
-import {returnForbidden, returnInternalServerError} from '../../common/use-cases/status-data-container';
+import {returnForbidden} from '../../common/use-cases/status-data-container';
 import {errorMessageToDto} from '../../common/use-cases/errors';
 
 /**
@@ -48,13 +48,8 @@ export const makeRemoveOrganizationMember = (
     const indexOfMemberEmailToRemove = organizationModel.memberEmails.indexOf(memberEmailToRemove, 0);
     if (indexOfMemberEmailToRemove > -1) {
       organizationModel.memberEmails.splice(indexOfMemberEmailToRemove, 1);
-      try {
-        await organizationModel.markModified('memberEmails');
-        await organizationModel.save();
-      } catch (err) {
-        logger.error(`An error has occurred: ${err}`);
-        return returnInternalServerError();
-      }
+      await organizationModel.markModified('memberEmails');
+      await organizationModel.save();
     } else {
       return {
         status: 400,

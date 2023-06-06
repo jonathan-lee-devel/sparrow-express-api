@@ -135,26 +135,4 @@ describe('Registration Service Confirm Registration Tests', () => {
     expect(tokenIsSaved).toBeTruthy();
     expect(userIsSaved).toBeTruthy();
   });
-  it('When error thrown Then error logged and return internal server error', async () => {
-    const errorMessage = 'RegistrationVerificationTokenModel.findOne is not a function';
-    let loggedMessage = '';
-    // @ts-ignore
-    const confirmRegistration = makeConfirmRegistration(
-        // @ts-ignore
-        {
-          // @ts-ignore
-          error: (message) => {
-            loggedMessage = message;
-          },
-        },
-        {},
-        {},
-    );
-
-    const result = await confirmRegistration('12345');
-
-    expect(result.status).toStrictEqual(500);
-    expect(result.data).toBeUndefined();
-    expect(loggedMessage).toStrictEqual(`An error has occurred: TypeError: ${errorMessage}`);
-  });
 });

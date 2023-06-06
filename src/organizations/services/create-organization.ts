@@ -5,7 +5,6 @@ import {Organization} from '../models/Organization';
 import {User} from '../../main/models/User';
 import {CreateOrganizationFunction} from '../types/create-organization';
 import {DEFAULT_ID_LENGTH} from '../../util/id/constants/default-id-length';
-import {returnInternalServerError} from '../../common/use-cases/status-data-container';
 
 /**
  * Closure for the service function which creates an organization.
@@ -36,18 +35,13 @@ export const makeCreateOrganization = (
       memberEmails: [],
     };
 
-    try {
-      await new OrganizationModel(organization).save();
-      logger.info(`POST new organization with ID: ${organization.id}`);
-      return {
-        status: 201,
-        data: {
-          ...organization,
-        },
-      };
-    } catch (err) {
-      logger.error(`An error has occurred: ${err}`);
-      return returnInternalServerError();
-    }
+    await new OrganizationModel(organization).save();
+    logger.info(`POST new organization with ID: ${organization.id}`);
+    return {
+      status: 201,
+      data: {
+        ...organization,
+      },
+    };
   };
 };

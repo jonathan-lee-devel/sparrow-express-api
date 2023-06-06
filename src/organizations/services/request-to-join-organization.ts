@@ -2,7 +2,6 @@ import bunyan from 'bunyan';
 import {Organization} from '../models/Organization';
 import {Model} from 'mongoose';
 import {RequestToJoinOrganizationFunction} from '../types/request-to-join-organization';
-import {returnInternalServerError} from '../../common/use-cases/status-data-container';
 import {User} from '../../main/models/User';
 import {OrganizationMembershipRequest} from '../models/OrganizationMembershipRequest';
 import {OrganizationMembershipStatus} from '../enums/OrganizationMembershipStatus';
@@ -70,12 +69,7 @@ export const makeRequestToJoinOrganization = (
       requestingUserEmail: requestingUser.email,
       isApproved: false,
     };
-    try {
-      await new OrganizationMembershipRequestModel(organizationMembershipRequest).save();
-    } catch (err) {
-      logger.error(`An error has occurred: ${err}`);
-      return returnInternalServerError();
-    }
+    await new OrganizationMembershipRequestModel(organizationMembershipRequest).save();
     return {
       status: 200,
       data: {
