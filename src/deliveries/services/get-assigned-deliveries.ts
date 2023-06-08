@@ -4,6 +4,7 @@ import {Delivery} from '../models/Delivery';
 import {GetAssignedDeliveriesFunction} from '../types/get-assigned-deliveries';
 import {User} from '../../main/models/User';
 import {DeliveryDto} from '../dto/DeliveryDto';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 export const makeGetAssignedDeliveries = (
     logger: bunyan,
@@ -28,7 +29,7 @@ export const makeGetAssignedDeliveries = (
     }
 
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: deliveryDtos,
     };
   };

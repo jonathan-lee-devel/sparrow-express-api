@@ -1,6 +1,7 @@
 import {Router} from 'express';
 import bunyan from 'bunyan';
 import {LoginStatus} from '../enums/login-status';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Configuration for the user logout route.
@@ -17,9 +18,9 @@ export const configureLogoutRoute = (
     req.logout((err) => {
       if (err) {
         logger.error(`An error has occurred during logout: ${err}`);
-        return res.status(500).json({logoutStatus: LoginStatus[LoginStatus.FAILURE]});
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({logoutStatus: LoginStatus[LoginStatus.FAILURE]});
       }
     });
-    return res.status(200).json({logoutStatus: LoginStatus[LoginStatus.SUCCESS]});
+    return res.status(HttpStatus.OK).json({logoutStatus: LoginStatus[LoginStatus.SUCCESS]});
   });
 };

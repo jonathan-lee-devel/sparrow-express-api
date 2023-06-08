@@ -3,6 +3,7 @@ import {Model} from 'mongoose';
 import {UpdateProfileFunction} from '../types/update-profile';
 import {User} from '../../main/models/User';
 import {returnForbidden, returnInternalServerError} from '../../common/use-cases/status-data-container';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Closure for function to update user profile.
@@ -32,7 +33,7 @@ export const makeUpdateProfile = (
     userModel.lastName = lastName;
     await userModel.save();
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         email,
         firstName,

@@ -2,6 +2,7 @@
 nginx
 node_modules
 .env
+.env.local
 .gitignore
 docker-compose.yml
 Dockerfile

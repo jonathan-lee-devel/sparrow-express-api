@@ -5,6 +5,7 @@ import {GetNotificationByIdFunction} from '../types/get-notification-by-id';
 import {User} from '../../main/models/User';
 import {returnForbidden, returnNotFound} from '../../common/use-cases/status-data-container';
 import {NotificationType} from '../enums/NotificationType';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 export const makeGetNotificationById = (
     logger: bunyan,
@@ -22,7 +23,7 @@ export const makeGetNotificationById = (
       return returnForbidden();
     }
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         targetUserEmail: notificationModel.targetUserEmail,
         title: notificationModel.title,

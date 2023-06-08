@@ -4,6 +4,7 @@ import {randomBytes} from 'crypto';
 import {addMinutes} from 'date-fns';
 import {PasswordResetVerificationToken} from '../models/PasswordResetVerificationToken';
 import {GeneratePasswordResetVerificationTokenFunction} from '../types/generate-password-reset-verification-token';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Closure for generating password reset verification token.
@@ -28,7 +29,7 @@ export const makeGeneratePasswordResetVerificationToken = (
     ).save();
 
     return {
-      status: 201,
+      status: HttpStatus.CREATED,
       data: passwordResetVerificationToken,
     };
   };

@@ -6,6 +6,7 @@ import {returnInternalServerError} from '../../common/use-cases/status-data-cont
 import {GetUnacknowledgedNotificationsFunction} from '../types/get-unacknowledged-notifications';
 import {NotificationDto} from '../dto/NotificationDto';
 import {NotificationType} from '../enums/NotificationType';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 export const makeGetUnacknowledgedNotifications = (
     logger: bunyan,
@@ -36,7 +37,7 @@ export const makeGetUnacknowledgedNotifications = (
     }
 
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: notificationDtos,
     };
   };

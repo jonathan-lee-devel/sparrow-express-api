@@ -4,6 +4,7 @@ import {Organization} from '../models/Organization';
 import {User} from '../../main/models/User';
 import {GetOrganizationFunction} from '../types/get-organization';
 import {returnForbidden, returnNotFound} from '../../common/use-cases/status-data-container';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Closure for the service function which gets organization data by ID.
@@ -37,7 +38,7 @@ export const makeGetOrganization = (
     }
 
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         id: organizationModel.id,
         name: organizationModel.name,

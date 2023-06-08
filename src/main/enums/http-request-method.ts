@@ -7,6 +7,8 @@ export enum HttpRequestMethod {
     // eslint-disable-next-line no-unused-vars
     POST = 'post',
     // eslint-disable-next-line no-unused-vars
+    PATCH = 'patch',
+    // eslint-disable-next-line no-unused-vars
     PUT = 'put',
     // eslint-disable-next-line no-unused-vars
     DELETE = 'delete',

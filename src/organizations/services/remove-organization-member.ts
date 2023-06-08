@@ -5,6 +5,7 @@ import {User} from '../../main/models/User';
 import {RemoveOrganizationMemberFunction} from '../types/remove-organization-member';
 import {returnForbidden} from '../../common/use-cases/status-data-container';
 import {errorMessageToDto} from '../../common/use-cases/errors';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Closure for the service function which removes an organization member.
@@ -32,7 +33,7 @@ export const makeRemoveOrganizationMember = (
     const organizationModel = await OrganizationModel.findOne({id: organizationId}, {__v: 0});
     if (!organizationModel) {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: errorMessageToDto(`Organization with ID: ${organizationId} does not exist`),
       };
     }
@@ -41,7 +42,7 @@ export const makeRemoveOrganizationMember = (
     }
     if (!organizationModel.memberEmails.includes(memberEmailToRemove)) {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: errorMessageToDto(`Organization with ID: ${organizationId} has no member: <${memberEmailToRemove}>`),
       };
     }
@@ -52,12 +53,12 @@ export const makeRemoveOrganizationMember = (
       await organizationModel.save();
     } else {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: errorMessageToDto(`Organization with ID: ${organizationId} has no member: <${memberEmailToRemove}>`),
       };
     }
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         id: organizationModel.id,
         name: organizationModel.name,

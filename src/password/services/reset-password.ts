@@ -8,6 +8,7 @@ import {GeneratePasswordResetVerificationTokenFunction} from '../types/generate-
 import {SendMailFunction} from '../../util/email/types/send-mail';
 import {DEFAULT_TOKEN_SIZE} from '../../util/token/default-token-size';
 import {DEFAULT_TOKEN_EXPIRY_TIME_MINUTES} from '../../util/token/default-token-expiry-time-minutes';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 export const makeResetPassword = (
     logger: bunyan,
@@ -23,7 +24,7 @@ export const makeResetPassword = (
     const userModel = await UserModel.findOne({email}, {__v: 0});
     if (!userModel) {
       return {
-        status: 200,
+        status: HttpStatus.OK,
         data: {
           status: PasswordResetStatus[
               PasswordResetStatus.AWAITING_EMAIL_VERIFICATION
@@ -38,7 +39,7 @@ export const makeResetPassword = (
     if (!passwordResetVerificationTokenModel) {
       logger.error(`Password reset token does not exist for user: ${email}`);
       return {
-        status: 200,
+        status: HttpStatus.OK,
         data: {
           status: PasswordResetStatus[
               PasswordResetStatus.AWAITING_EMAIL_VERIFICATION
@@ -55,12 +56,12 @@ export const makeResetPassword = (
                     DEFAULT_TOKEN_EXPIRY_TIME_MINUTES,
                     email,
                 );
-    if (passwordResetVerificationTokenContainer.status !== 201) {
+    if (passwordResetVerificationTokenContainer.status !== HttpStatus.CREATED) {
       logger.error(`generatePasswordResetVerificationToken returned ${
         passwordResetVerificationTokenContainer.status
       }`);
       return {
-        status: 200,
+        status: HttpStatus.OK,
         data: {
           status: PasswordResetStatus[
               PasswordResetStatus.AWAITING_EMAIL_VERIFICATION
@@ -76,7 +77,7 @@ export const makeResetPassword = (
           logger.error(`An error has occurred while sending mail: ${reason}`);
         });
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         status: PasswordResetStatus[
             PasswordResetStatus.AWAITING_EMAIL_VERIFICATION

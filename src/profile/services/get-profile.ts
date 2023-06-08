@@ -4,6 +4,7 @@ import {GetProfileFunction} from '../types/get-profile';
 import {User} from '../../main/models/User';
 // eslint-disable-next-line max-len
 import {returnForbidden, returnInternalServerError} from '../../common/use-cases/status-data-container';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Closure for function to get user profile.
@@ -26,7 +27,7 @@ export const makeGetProfile = (
     }
 
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         email,
         firstName: userModel.firstName,

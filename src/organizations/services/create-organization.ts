@@ -5,6 +5,7 @@ import {Organization} from '../models/Organization';
 import {User} from '../../main/models/User';
 import {CreateOrganizationFunction} from '../types/create-organization';
 import {DEFAULT_ID_LENGTH} from '../../util/id/constants/default-id-length';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Closure for the service function which creates an organization.
@@ -38,7 +39,7 @@ export const makeCreateOrganization = (
     await new OrganizationModel(organization).save();
     logger.info(`POST new organization with ID: ${organization.id}`);
     return {
-      status: 201,
+      status: HttpStatus.CREATED,
       data: {
         ...organization,
       },

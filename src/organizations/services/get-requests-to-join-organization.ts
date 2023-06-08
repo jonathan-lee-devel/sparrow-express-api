@@ -7,6 +7,7 @@ import {returnForbidden} from '../../common/use-cases/status-data-container';
 import {GetRequestsToJoinOrganizationFunction} from '../types/get-requests-to-join-organization';
 import {errorMessageToDto} from '../../common/use-cases/errors';
 import {OrganizationMembershipRequestDto} from '../dtos/OrganizationMembershipRequestDto';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Closure for the service function which obtains requests to join a given organization by organization ID.
@@ -33,7 +34,7 @@ export const makeGetRequestsToJoinOrganization = (
     const organizationModel = await OrganizationModel.findOne({id: organizationId}, {__v: 0});
     if (!organizationModel) {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: errorMessageToDto(`Organization with ID ${organizationId} does not exist`),
       };
     }
@@ -53,7 +54,7 @@ export const makeGetRequestsToJoinOrganization = (
       });
     }
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: organizationMembershipRequestDtos,
     };
   };

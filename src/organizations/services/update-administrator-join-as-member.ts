@@ -6,6 +6,7 @@ import {returnForbidden, returnNotFound} from '../../common/use-cases/status-dat
 import {User} from '../../main/models/User';
 import {errorMessageToDto} from '../../common/use-cases/errors';
 import {OrganizationMembershipStatus} from '../enums/OrganizationMembershipStatus';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 export const makeUpdateAdministratorJoinAsMember = (
     logger: bunyan,
@@ -26,7 +27,7 @@ export const makeUpdateAdministratorJoinAsMember = (
     }
     if (organizationModel.memberEmails.includes(requestingUser.email)) {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: errorMessageToDto(`User is already a member of organization with ID: ${toJoinOrganizationId}`),
       };
     }
@@ -34,7 +35,7 @@ export const makeUpdateAdministratorJoinAsMember = (
     await organizationModel.markModified('memberEmails');
     await organizationModel.save();
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         status: OrganizationMembershipStatus[OrganizationMembershipStatus.SUCCESS],
       },

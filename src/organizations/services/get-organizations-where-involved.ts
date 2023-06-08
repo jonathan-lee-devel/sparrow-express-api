@@ -4,6 +4,7 @@ import {Organization} from '../models/Organization';
 import {GetOrganizationsWhereInvolvedFunction} from '../types/get-organizations-where-involved';
 import {User} from '../../main/models/User';
 import {OrganizationDto} from '../dtos/OrganizationDto';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Closure for the service function which obtains organizations in which the requesting user is involved.
@@ -41,7 +42,7 @@ export const makeGetOrganizationsWhereInvolved = (
       });
     }
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: organizationDtos,
     };
   };

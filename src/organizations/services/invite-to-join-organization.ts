@@ -12,6 +12,7 @@ import {SendMailFunction} from '../../util/email/types/send-mail';
 import {DEFAULT_TOKEN_SIZE} from '../../util/token/default-token-size';
 import {addDays} from 'date-fns';
 import {DEFAULT_TOKEN_EXPIRY_TIME_DAYS} from '../../util/token/default-token-expiry-time-days';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Closure for service function which invites a given user to join an organization.
@@ -45,7 +46,7 @@ export const makeInviteToJoinOrganization = (
     const organizationModel = await OrganizationModel.findOne({id: organizationId}, {__v: 0});
     if (!organizationModel) {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: {
           status: OrganizationMembershipStatus[OrganizationMembershipStatus.ORGANIZATION_DOES_NOT_EXIST],
         },
@@ -56,7 +57,7 @@ export const makeInviteToJoinOrganization = (
     }
     if (organizationModel.memberEmails.includes(emailToInvite)) {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: {
           status: OrganizationMembershipStatus[OrganizationMembershipStatus.USER_ALREADY_MEMBER],
         },
@@ -68,7 +69,7 @@ export const makeInviteToJoinOrganization = (
     }, {__v: 0});
     if (organizationInvitationModel) {
       return {
-        status: 409,
+        status: HttpStatus.CONFLICT,
         data: {
           status: OrganizationMembershipStatus[OrganizationMembershipStatus.REQUEST_ALREADY_EXISTS],
         },
@@ -92,7 +93,7 @@ export const makeInviteToJoinOrganization = (
         });
     logger.info(`Organization invitation sent to e-mail: <${emailToInvite}> with ID: ${organizationInvitation.id}`);
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         status: OrganizationMembershipStatus[OrganizationMembershipStatus.AWAITING_APPROVAL],
       },

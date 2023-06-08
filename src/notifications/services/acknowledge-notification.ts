@@ -6,6 +6,7 @@ import {User} from '../../main/models/User';
 import {returnForbidden, returnNotFound} from '../../common/use-cases/status-data-container';
 import {NotificationType} from '../enums/NotificationType';
 import {errorMessageToDto} from '../../common/use-cases/errors';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 export const makeAcknowledgeNotification = (
     logger: bunyan,
@@ -24,14 +25,14 @@ export const makeAcknowledgeNotification = (
     }
     if (notificationModel.isAcknowledged) {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: errorMessageToDto('Notification is already acknowledged'),
       };
     }
     notificationModel.isAcknowledged = true;
     await notificationModel.save();
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         targetUserEmail: notificationModel.targetUserEmail,
         title: notificationModel.title,

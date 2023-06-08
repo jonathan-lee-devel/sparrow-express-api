@@ -6,6 +6,7 @@ import {GetAllNotificationsFunction} from '../types/get-all-notifications';
 import {returnInternalServerError} from '../../common/use-cases/status-data-container';
 import {NotificationDto} from '../dto/NotificationDto';
 import {NotificationType} from '../enums/NotificationType';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 export const makeGetAllNotifications = (
     logger: bunyan,
@@ -35,7 +36,7 @@ export const makeGetAllNotifications = (
     }
 
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: notificationDtos,
     };
   };

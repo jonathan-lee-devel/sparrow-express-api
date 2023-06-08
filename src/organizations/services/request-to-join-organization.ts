@@ -7,6 +7,7 @@ import {OrganizationMembershipRequest} from '../models/OrganizationMembershipReq
 import {OrganizationMembershipStatus} from '../enums/OrganizationMembershipStatus';
 import {GenerateIdFunction} from '../../util/id/types/generate-id';
 import {DEFAULT_ID_LENGTH} from '../../util/id/constants/default-id-length';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Closure for the service function which makes a request for the requesting user to join a given organization by ID.
@@ -36,7 +37,7 @@ export const makeRequestToJoinOrganization = (
     const organizationModel = await OrganizationModel.findOne({id: organizationId}, {__v: 0});
     if (!organizationModel) {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: {
           status: OrganizationMembershipStatus[OrganizationMembershipStatus.ORGANIZATION_DOES_NOT_EXIST],
         },
@@ -45,7 +46,7 @@ export const makeRequestToJoinOrganization = (
     if (organizationModel.memberEmails.includes(requestingUser.email) ||
             organizationModel.administratorEmails.includes(requestingUser.email)) {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: {
           status: OrganizationMembershipStatus[OrganizationMembershipStatus.USER_ALREADY_MEMBER],
         },
@@ -56,7 +57,7 @@ export const makeRequestToJoinOrganization = (
         .findOne({organizationId, requestingUserEmail: requestingUser.email}, {__v: 0});
     if (organizationMembershipRequestModel) {
       return {
-        status: 409,
+        status: HttpStatus.CONFLICT,
         data: {
           status: OrganizationMembershipStatus[OrganizationMembershipStatus.REQUEST_ALREADY_EXISTS],
         },
@@ -71,7 +72,7 @@ export const makeRequestToJoinOrganization = (
     };
     await new OrganizationMembershipRequestModel(organizationMembershipRequest).save();
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         status: OrganizationMembershipStatus[OrganizationMembershipStatus.AWAITING_APPROVAL],
       },

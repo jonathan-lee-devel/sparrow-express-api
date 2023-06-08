@@ -7,6 +7,7 @@ import {returnForbidden, returnNotFound} from '../../common/use-cases/status-dat
 import {ApproveRequestToJoinOrganizationFunction} from '../types/approve-request-to-join-organization';
 import {errorMessageToDto} from '../../common/use-cases/errors';
 import {OrganizationMembershipStatus} from '../enums/OrganizationMembershipStatus';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Closure for the service function which approves a request to join an organization.
@@ -41,7 +42,7 @@ export const makeApproveRequestToJoinOrganization = (
     if (!organizationModel) {
       logger.error(`Organization membership request with ID: ${organizationMembershipRequestId} references non-existent organization`);
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: errorMessageToDto(`Organization with ID: ${organizationMembershipRequestModel.organizationId} does not exist`),
       };
     }
@@ -50,7 +51,7 @@ export const makeApproveRequestToJoinOrganization = (
     }
     if (organizationModel.memberEmails.includes(organizationMembershipRequestModel.requestingUserEmail)) {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: {
           status: OrganizationMembershipStatus[OrganizationMembershipStatus.USER_ALREADY_MEMBER],
         },
@@ -65,7 +66,7 @@ export const makeApproveRequestToJoinOrganization = (
     await organizationMembershipRequestModel.save();
 
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         status: OrganizationMembershipStatus[OrganizationMembershipStatus.SUCCESS],
       },

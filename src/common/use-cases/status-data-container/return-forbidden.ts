@@ -1,5 +1,6 @@
 import {ReturnForbiddenFunction} from './types/return-forbidden';
 import bunyan from 'bunyan';
+import {HttpStatus} from '../../enums/HttpStatus';
 
 /**
  * Helper function for returning HTTP 403 Forbidden errors.
@@ -10,7 +11,7 @@ export const makeReturnForbidden = (logger: bunyan): ReturnForbiddenFunction => 
   return function() {
     logger.info(`Access denied`);
     return {
-      status: 403,
+      status: HttpStatus.FORBIDDEN,
       data: undefined,
     };
   };

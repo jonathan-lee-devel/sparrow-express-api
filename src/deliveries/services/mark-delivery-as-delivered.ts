@@ -6,6 +6,7 @@ import {MarkDeliveryAsDeliveredFunction} from '../types/mark-delivery-as-deliver
 import {User} from '../../main/models/User';
 import {returnForbidden, returnNotFound} from '../../common/use-cases/status-data-container';
 import {errorMessageToDto} from '../../common/use-cases/errors';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 export const makeMarkDeliveryAsDelivered = (
     logger: bunyan,
@@ -26,7 +27,7 @@ export const makeMarkDeliveryAsDelivered = (
         .findOne({id: deliveryModel.organizationId}, {__v: 0});
     if (!organizationModel) {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: errorMessageToDto('Organization ID for delivery does not exist'),
       };
     }
@@ -38,14 +39,14 @@ export const makeMarkDeliveryAsDelivered = (
 
     if (deliveryModel.isDelivered) {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: errorMessageToDto('Delivery already marked as delivered'),
       };
     }
     deliveryModel.isDelivered = true;
     await deliveryModel.save();
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         id: deliveryModel.id,
         isDelivered: deliveryModel.isDelivered,

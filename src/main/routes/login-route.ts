@@ -2,7 +2,8 @@ import {Router} from 'express';
 import passport from 'passport';
 import bunyan from 'bunyan';
 import {LoginStatus} from '../enums/login-status';
-import {User} from "../models/User";
+import {User} from '../models/User';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Configuration for the user login route.
@@ -21,7 +22,7 @@ export const configureLoginRoute = (
         return next(err);
       }
       if (!user) {
-        return res.status(401).json({loginStatus: LoginStatus[LoginStatus.FAILURE]});
+        return res.status(HttpStatus.UNAUTHORIZED).json({loginStatus: LoginStatus[LoginStatus.FAILURE]});
       }
 
       req.login(user, (loginError) => {
@@ -29,7 +30,7 @@ export const configureLoginRoute = (
           return next(loginError);
         }
         logger.info(`Successful login for user with email: <${user.email}>`);
-        return res.status(200).json({
+        return res.status(HttpStatus.OK).json({
           loginStatus: LoginStatus[LoginStatus.SUCCESS], user: {
             firstName: user.firstName,
             lastName: user.lastName,

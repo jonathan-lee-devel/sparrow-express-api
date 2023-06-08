@@ -4,6 +4,7 @@ import {OrganizationInvitation} from '../models/OrganizationInvitation';
 import {User} from '../../main/models/User';
 import {GetOrganizationInvitationByTokenValueFunction} from '../types/get-organization-invitation-by-token-value';
 import {returnForbidden, returnNotFound} from '../../common/use-cases/status-data-container';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Closure for the service function which gets organization invitation data by token value.
@@ -37,7 +38,7 @@ export const makeGetOrganizationInvitationByTokenValue = (
     }
 
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         id: organizationInvitationModel.id,
         organizationId: organizationInvitationModel.organizationId,

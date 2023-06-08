@@ -12,6 +12,7 @@ import {GenerateRegistrationVerificationTokenFunction} from '../types/generate-r
 import {
   GeneratePasswordResetVerificationTokenFunction,
 } from '../../password/types/generate-password-reset-verification-token';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 export const makeRegisterUser = (
     logger: bunyan,
@@ -32,7 +33,7 @@ export const makeRegisterUser = (
   ) {
     if (await handleExistingUser(email)) {
       return {
-        status: 409,
+        status: HttpStatus.CONFLICT,
         data: {
           status: RegistrationStatus[RegistrationStatus.USER_ALREADY_EXISTS],
         },
@@ -50,10 +51,10 @@ export const makeRegisterUser = (
                 0,
                 email,
             );
-    if (registrationVerificationTokenContainer.status !== 201 ||
-            expiredPasswordResetVerificationTokenContainer.status !== 201) {
+    if (registrationVerificationTokenContainer.status !== HttpStatus.CREATED ||
+            expiredPasswordResetVerificationTokenContainer.status !== HttpStatus.CREATED) {
       return {
-        status: 500,
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
         data: {
           status: RegistrationStatus[RegistrationStatus.FAILURE],
         },
@@ -77,7 +78,7 @@ export const makeRegisterUser = (
         });
 
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         status: RegistrationStatus[RegistrationStatus.AWAITING_EMAIL_VERIFICATION],
       },

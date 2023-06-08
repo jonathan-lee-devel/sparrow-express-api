@@ -4,6 +4,7 @@ import {Organization} from '../models/Organization';
 import {User} from '../../main/models/User';
 import {returnNotFound} from '../../common/use-cases/status-data-container';
 import {GetOrganizationSnippetFunction} from '../types/get-organization-snippet';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Closure for the service function which obtains organization snippet data by ID.
@@ -32,7 +33,7 @@ export const makeGetOrganizationSnippet = (
     }
 
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         id: organizationModel.id,
         name: organizationModel.name,

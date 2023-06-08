@@ -5,6 +5,7 @@ import {User} from '../../main/models/User';
 import {returnForbidden} from '../../common/use-cases/status-data-container';
 import {errorMessageToDto} from '../../common/use-cases/errors';
 import {RemoveOrganizationAdministratorFunction} from '../types/remove-organization-administrator';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 /**
  * Closure for service function which removes an organization administrator.
@@ -32,7 +33,7 @@ export const makeRemoveOrganizationAdministrator = (
     const organizationModel = await OrganizationModel.findOne({id: organizationId}, {__v: 0});
     if (!organizationModel) {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: errorMessageToDto(`Organization with ID: ${organizationId} does not exist`),
       };
     }
@@ -41,7 +42,7 @@ export const makeRemoveOrganizationAdministrator = (
     }
     if (!organizationModel.administratorEmails.includes(administratorEmailToRemove)) {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: errorMessageToDto(`Organization with ID: ${organizationId} has no administrator: <${administratorEmailToRemove}>`),
       };
     }
@@ -53,12 +54,12 @@ export const makeRemoveOrganizationAdministrator = (
       await organizationModel.save();
     } else {
       return {
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
         data: errorMessageToDto(`Organization with ID: ${organizationId} has no administrator: <${administratorEmailToRemove}>`),
       };
     }
     return {
-      status: 200,
+      status: HttpStatus.OK,
       data: {
         id: organizationModel.id,
         name: organizationModel.name,

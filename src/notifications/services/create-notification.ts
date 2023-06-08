@@ -6,6 +6,7 @@ import {NotificationRequestDto} from '../dto/NotificationRequestDto';
 import {DEFAULT_ID_LENGTH} from '../../util/id/constants/default-id-length';
 import {Notification} from '../models/Notification';
 import {NotificationType} from '../enums/NotificationType';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 export const makeCreateNotification = (
     logger: bunyan,
@@ -24,7 +25,7 @@ export const makeCreateNotification = (
     await new NotificationModel(newNotification).save();
     logger.info(`Successfully created new notification with ID: ${newNotification.id}`);
     return {
-      status: 201,
+      status: HttpStatus.CREATED,
       data: {
         id: newNotification.id,
         title: newNotification.title,

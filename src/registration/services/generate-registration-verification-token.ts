@@ -4,6 +4,7 @@ import {randomBytes} from 'crypto';
 import {addMinutes} from 'date-fns';
 import {RegistrationVerificationToken} from '../models/RegistrationVerificationToken';
 import {GenerateRegistrationVerificationTokenFunction} from '../types/generate-registration-verification-token';
+import {HttpStatus} from '../../common/enums/HttpStatus';
 
 export const makeGenerateRegistrationVerificationToken = (
     logger: bunyan,
@@ -24,7 +25,7 @@ export const makeGenerateRegistrationVerificationToken = (
 
     logger.info(`Generated registration verification token for user with e-mail: <${userEmail}>`);
     return {
-      status: 201,
+      status: HttpStatus.CREATED,
       data: registrationVerificationToken,
     };
   };
